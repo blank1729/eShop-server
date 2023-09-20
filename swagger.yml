@@ -1,0 +1,36 @@
+paths:
+    /api/v1/stores/all:
+        get:
+            consumes:
+                - application/json
+            description: |-
+                This will show all available pets by default.
+                You can get the pets that are out of stock
+            operationId: listPets
+            parameters:
+                - description: maximum numnber of results to return
+                  format: int32
+                  in: query
+                  name: limit
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/someResponse'
+                "422":
+                    $ref: '#/responses/validationError'
+                default:
+                    $ref: '#/responses/genericError'
+            schemes:
+                - http
+            security:
+                - api_key: []
+                - oauth:
+                    - read
+                    - write
+            summary: Lists pets filtered by some parameters.
+            tags:
+                - pets
+                - users
+swagger: "2.0"
