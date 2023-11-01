@@ -91,3 +91,35 @@ func FindAllProducts(db *gorm.DB, storeID string) ([]Product, error) {
 	}
 	return products, nil
 }
+
+type ProductWithItems struct {
+	Product Product
+	Items   []ProductItem
+}
+
+func GetProductsByQuery(db *gorm.DB, queryParams map[string]string) ([]ProductWithItems, error) {
+	var results []ProductWithItems
+
+	// Fetch products based on query parameters.
+	err := db.Preload("ProductItems", func(db *gorm.DB) *gorm.DB {
+		// Apply filters to ProductItems based on query parameters.
+		for key, value := range queryParams {
+			switch key {
+			case "size":
+				db = db.Where("product_items.size = ?", value)
+			case "color":
+				db = db.Where("product_items.color = ?", value)
+			case "price":
+				db = db.Where("product_items.price <= ?", value)
+				// Add more cases for additional filters as needed.
+			}
+		}
+		return db
+	}).Find(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

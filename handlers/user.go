@@ -31,6 +31,7 @@ type UpdateUserRequest struct {
 
 type UserHandler struct {
 	db *gorm.DB // Your database connection
+	// you can add a logger here
 }
 
 func NewUserHandler(db *gorm.DB) *UserHandler {
@@ -38,7 +39,7 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 }
 
 func (h *UserHandler) GetUserByID(c *gin.Context) {
-	userID := c.Param("id")
+	userID := c.Param("user_id")
 
 	if !(utils.CheckUser(c, userID)) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unautorized"})
@@ -55,7 +56,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
-	userID := c.Param("id")
+	userID := c.Param("user_id")
 
 	var updateReq UpdateUserRequest
 	if err := c.ShouldBindJSON(&updateReq); err != nil {

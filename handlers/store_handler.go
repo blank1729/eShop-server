@@ -67,10 +67,14 @@ func (h *StoreHandler) CreateStore(c *gin.Context) {
 
 // GetStore retrieves a store by ID
 func (h *StoreHandler) GetStore(c *gin.Context) {
-	storeID := c.Param("id")
+	storeID := c.Param("store_id")
+
+	// todo : validate this route
 
 	var store models.Store
-	if err := db.DB.Where("store_id = ?", storeID).Preload("Categories").Preload("Products").Preload("Customers").Preload("Orders").First(&store).Error; err != nil {
+	// if err := db.DB.Where("store_id = ?", storeID).Preload("Categories").Preload("Products").Preload("Customers").Preload("Orders").First(&store).Error; err != nil {
+	fmt.Println(store)
+	if err := h.db.Where("id = ?", storeID).First(&store).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Store not found"})
 		return
 	}

@@ -24,17 +24,20 @@ type LoginRequest struct {
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
+	// unmarshsal the signup request from client
 	var request SignupRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// check if there an existing user with give email or username
 	if _, err := models.GetUserByEmail(h.db, request.Email); err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user exists"})
 		return
 	}
 
+	// create a user object
 	var user models.User
 
 	u, _ := uuid.NewRandom()
@@ -44,7 +47,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	user.Username = request.Username
 	user.Password, _ = utils.GenerateHashPassword(request.Password)
 
-	// Create the user
+	// Add user to database
 	if err := models.CreateUser(h.db, &user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
