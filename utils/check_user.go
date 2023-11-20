@@ -8,6 +8,8 @@ import (
 
 func CheckUser(c *gin.Context, user_id string) bool {
 	u, exists := c.Get("user_id")
+
+	// check if the user exists in db, if not then redirect to logout
 	if !exists {
 		return false
 	}

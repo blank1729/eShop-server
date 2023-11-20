@@ -10,11 +10,11 @@ import (
 
 type Product struct {
 	BaseModel
-	ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;not null"`
+	// ID uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;not null"`
 
 	Name        string  `json:"name" binding:"required,min=1"`
 	Description string  `json:"description" binding:"required,min=1"`
-	Rating      float32 `json:"rating" binding:"gte=0,lte=5" gorm:"default:0"`
+	Rating      float32 `json:"rating" binding:"gte=1,lte=5" gorm:"default:0"`
 
 	CategoryID string  `json:"category_id" gorm:"not null;type:uuid" binding:"required"`
 	StoreID    string  `json:"store_id" gorm:"not null;type:uuid"`
@@ -27,6 +27,7 @@ type Product struct {
 	// is archived
 	// is featured
 	// is active
+	// primary_image_id
 }
 
 func (product *Product) BeforeCreate(tx *gorm.DB) (err error) {
@@ -36,8 +37,8 @@ func (product *Product) BeforeCreate(tx *gorm.DB) (err error) {
 		log.Println("error with the uuid generation", err.Error())
 		return err
 	}
-	product.ID = u
-	return
+	product.ID = u.String()
+	return nil
 }
 
 func (product *Product) BeforeSave(tx *gorm.DB) (err error) {

@@ -18,6 +18,6 @@ type ProductItem struct {
 	Images           []Image           `json:"images,omitempty" gorm:"foreignKey:ProductItemID;"`
 
 	// ORDERS PLACED
-	// idDefault
-
+	// isDefault
+	// primary_image_id
 }
