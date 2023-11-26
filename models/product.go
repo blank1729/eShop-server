@@ -14,7 +14,7 @@ type Product struct {
 
 	Name        string  `json:"name" binding:"required,min=1"`
 	Description string  `json:"description" binding:"required,min=1"`
-	Rating      float32 `json:"rating" binding:"gte=1,lte=5" gorm:"default:0"`
+	Rating      float32 `json:"rating" binding:"gte=0,lte=5" gorm:"default:0"`
 
 	CategoryID string  `json:"category_id" gorm:"not null;type:uuid" binding:"required"`
 	StoreID    string  `json:"store_id" gorm:"not null;type:uuid"`
@@ -28,6 +28,11 @@ type Product struct {
 	// is featured
 	// is active
 	// primary_image_id
+	// brand_id
+	// Code
+	// price *int = can be null
+	// DiscountPrice
+	// weight
 }
 
 func (product *Product) BeforeCreate(tx *gorm.DB) (err error) {

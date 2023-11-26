@@ -14,6 +14,7 @@ type Category struct {
 
 	Products []Product `json:"products,omitempty" gorm:"foreignKey:CategoryID"`
 	Options  []Option  `json:"options,omitempty" gorm:"foreignKey:CategoryID"`
+	// image or Icon
 }
 
 // CreateCategory creates a new category in the database.
