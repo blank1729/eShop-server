@@ -26,4 +26,5 @@ func Routes(r *gin.RouterGroup) {
 	SetCartItemRoutes(r)
 	// address
 	SetAddressRoutes(r)
+	SetProductItemRoutes(r)
 }

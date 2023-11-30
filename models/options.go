@@ -6,12 +6,12 @@ import (
 
 type Option struct {
 	BaseModel
-	Name string `json:"name" gorm:"not null,unique"`
+	Name        string  `json:"name" gorm:"not null,unique"`
+	Description *string `json:"description"`
 
 	CategoryID string `json:"category_id" gorm:"not null;type:uuid"`
 
-	OptionVariations []OptionVariation `json:"option_variations" gorm:"foreignKey:OptionID"`
-	//
+	OptionVariants *[]OptionVariant `json:"option_variants" gorm:"foreignKey:OptionID"`
 }
 
 // CreateOption creates a new option in the database.
@@ -22,7 +22,7 @@ func CreateOption(db *gorm.DB, option *Option) error {
 // GetOptionByID retrieves an option by its ID from the database.
 func GetOptionByID(db *gorm.DB, optionID string) (*Option, error) {
 	var option Option
-	if err := db.Where("id = ?", optionID).First(&option).Error; err != nil {
+	if err := db.Where("id = ?", optionID).Preload("OptionVariants").First(&option).Error; err != nil {
 		return nil, err
 	}
 	return &option, nil

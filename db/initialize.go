@@ -29,7 +29,7 @@ func SyncDatabase() {
 	DB.AutoMigrate(&models.Store{})
 	DB.AutoMigrate(&models.Category{})
 	DB.AutoMigrate(&models.Option{})
-	DB.AutoMigrate(&models.OptionVariation{})
+	DB.AutoMigrate(&models.OptionVariant{})
 	DB.AutoMigrate(&models.Product{})
 	DB.AutoMigrate(&models.ProductItem{})
 	DB.AutoMigrate(&models.Image{})

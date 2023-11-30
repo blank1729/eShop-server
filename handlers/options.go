@@ -23,7 +23,7 @@ func NewOptionHandler(db *gorm.DB) *OptionHandler {
 // CreateOption handles the creation of a new option.
 func (h *OptionHandler) CreateOption(c *gin.Context) {
 	// Extract store ID from the URL
-	storeID := c.Param("store_id")
+	// storeID := c.Param("store_id")
 
 	// Parse JSON input and validate it
 	var option models.Option
@@ -47,40 +47,40 @@ func (h *OptionHandler) CreateOption(c *gin.Context) {
 		return
 	}
 
+	// TODO : Remove this and add a BeforeUpdate function to the db functions
 	u, _ := uuid.NewRandom()
 	option.ID = u.String()
 
-	// Retrieve the category from the database based on the option's CategoryID
-	category, err := models.GetCategoryByID(h.db, option.CategoryID)
-	if err != nil {
-		// since category does not exists we have check if the store exists
+	// // Retrieve the category from the database based on the option's CategoryID
+	// category, err := models.GetCategoryByID(h.db, option.CategoryID)
+	// if err != nil {
+	// 	// since category does not exists we have check if the store exists
 
-		if _, err := models.GetCategoryByID(h.db, storeID); err != nil {
-			c.JSON(http.StatusBadGateway, gin.H{"error": "Store not found"})
-		}
+	// 	if _, err := models.GetCategoryByID(h.db, storeID); err != nil {
+	// 		c.JSON(http.StatusBadGateway, gin.H{"error": "Store not found"})
+	// 	}
 
-		c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
-		return
-	}
+	// 	c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+	// 	return
+	// }
 
-	// Check if the store ID from the URL matches the store ID in the category
-	if category.StoreID != storeID {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Category does not belong to the store"})
-		return
-	}
-
-	if option.OptionVariations != nil {
-		for _, op := range option.OptionVariations {
-			u, _ = uuid.NewRandom()
-			x := u.String()
-			op.ID = x
-		}
-	}
+	// // Check if the store ID from the URL matches the store ID in the category
+	// if category.StoreID != storeID {
+	// 	c.JSON(http.StatusForbidden, gin.H{"error": "Category does not belong to the store"})
+	// 	return
+	// }
 
 	// Insert the option into the database
 	if err := models.CreateOption(h.db, &option); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	if option.OptionVariants != nil {
+		for _, op := range *option.OptionVariants {
+			op.OptionID = option.ID
+			models.CreateOptionVariant(h.db, &op)
+		}
 	}
 
 	c.JSON(http.StatusCreated, option)
@@ -89,9 +89,9 @@ func (h *OptionHandler) CreateOption(c *gin.Context) {
 // GetOptionByID retrieves an option by its ID.
 func (h *OptionHandler) GetOptionByID(c *gin.Context) {
 	// Extract store ID from the URL
-	storeID := c.Param("store_id")
+	// storeID := c.Param("store_id")
 
-	optionID := c.Param("id")
+	optionID := c.Param("option_id")
 
 	// Retrieve the option from the database
 	option, err := models.GetOptionByID(h.db, optionID)
@@ -100,18 +100,18 @@ func (h *OptionHandler) GetOptionByID(c *gin.Context) {
 		return
 	}
 
-	// Retrieve the category from the database based on the option's CategoryID
-	category, err := models.GetCategoryByID(h.db, option.CategoryID)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
-		return
-	}
+	// // Retrieve the category from the database based on the option's CategoryID
+	// category, err := models.GetCategoryByID(h.db, option.CategoryID)
+	// if err != nil {
+	// 	c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+	// 	return
+	// }
 
-	// Check if the store ID from the URL matches the store ID in the category
-	if category.StoreID != storeID {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Category does not belong to the store"})
-		return
-	}
+	// // Check if the store ID from the URL matches the store ID in the category
+	// if category.StoreID != storeID {
+	// 	c.JSON(http.StatusForbidden, gin.H{"error": "Category does not belong to the store"})
+	// 	return
+	// }
 
 	c.JSON(http.StatusOK, option)
 }

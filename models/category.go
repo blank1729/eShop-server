@@ -6,10 +6,10 @@ import (
 
 type Category struct {
 	BaseModel
-	Name        string  `json:"name" gorm:"unique" form:"name" binding:"required"`
+	Name        string  `json:"name" gorm:"uniqueIndex" form:"name" binding:"required"` // create a unique key constraint on name + storeID
 	Description *string `json:"description,omitempty"`
 
-	StoreID        string  `json:"store_id" gorm:"not null;type:uuid"`
+	StoreID        string  `json:"store_id,omitempty" gorm:"uniqueIndex,not null,type:uuid"`
 	ParentCategory *string `json:"parent_category,omitempty" gorm:"type:uuid"` // can be null, if not pointer then the null value will be an empty string which is an invalid uuid type
 
 	Products []Product `json:"products,omitempty" gorm:"foreignKey:CategoryID"`

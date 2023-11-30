@@ -127,7 +127,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		// fmt.Println(h.db.Create(p).Error)
 		fmt.Printf("%+v\n", p)
 
-		for _, ov := range p.OptionVariations {
+		for _, ov := range p.OptionVariants {
 			u, _ := uuid.NewRandom()
 			x := u.String()
 			ov.ID = x

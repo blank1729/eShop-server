@@ -10,14 +10,14 @@ import (
 
 func SetProductItemRoutes(router *gin.RouterGroup) {
 	productItemHandler := handlers.NewProductItemHandler(db.DB)
-	productRoutes := router.Group("/stores/:store_id/products/:product_id/productitem")
+	productItemRoutes := router.Group("/stores/:store_id/products/:product_id/productitem")
 	{
-		productRoutes.GET("/all", productItemHandler.GetAllProducts)
-		productRoutes.GET("/:product_item_id", productItemHandler.GetProductByID)
+		// productRoutes.GET("/all", productItemHandler.GetAllProducts)
+		// productRoutes.GET("/:product_item_id", productItemHandler.GetProductByID)
 
 		// add IsApiUser Middleware
-		productRoutes.POST("/", middleware.IsAuthorized(), productItemHandler.CreateProductItem)
-		productRoutes.PUT("/:product_item_id", middleware.IsAuthorized(), productItemHandler.UpdateProduct)
-		productRoutes.DELETE("/:product_item_id", middleware.IsAuthorized(), productItemHandler.DeleteProduct)
+		productItemRoutes.POST("/", middleware.IsAuthorized(), productItemHandler.CreateProductItem)
+		// productRoutes.PUT("/:product_item_id", middleware.IsAuthorized(), productItemHandler.UpdateProduct)
+		// productRoutes.DELETE("/:product_item_id", middleware.IsAuthorized(), productItemHandler.DeleteProduct)
 	}
 }

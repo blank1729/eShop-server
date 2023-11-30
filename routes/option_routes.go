@@ -8,7 +8,7 @@ import (
 )
 
 func SetOptionRoutes(r *gin.RouterGroup) {
-	optionsRouter := r.Group("/store/:store_id/variants/:variant_id/options")
+	optionsRouter := r.Group("/stores/:store_id/options")
 
 	optionHandler := handlers.NewOptionHandler(db.DB)
 
